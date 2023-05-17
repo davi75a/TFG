@@ -1,0 +1,145 @@
+﻿@page
+@using MySql.Data.MySqlClient;
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    string result = "";
+    MySqlDataReader mySqlDataReader = null;
+    string consulta = "select * from manga";
+    Conexion.mConexion = new Conexion();
+    MySqlCommand mySqlCommand = new MySqlCommand(consulta);
+    mySqlCommand.Connection = Conexion.mConexion.getConxion();
+    mySqlDataReader = mySqlCommand.ExecuteReader();
+    var contadorId = 0;
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,700&subset=latin-ext" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <style>
+        .carousel-control {
+            padding-top: 10%;
+            width: 5%;
+        }
+    </style>
+</head>
+<body style="background-color:#C0F7F9;">
+    <!-- Muestra un manga aleatorio de la lista -->
+    @{
+        mySqlDataReader.Read();
+        Random random = new Random();
+        int fieldcount = mySqlDataReader.FieldCount;
+        int randomNumber = random.Next(0, fieldcount);
+        <a><img src="@mySqlDataReader.GetString("imagen")" width="500" height="750" /></a>
+        mySqlDataReader.Close();
+    }
+    <br />
+    <br />
+    <br />
+    <div id="myCarousel" class="carousel slide">
+        <div class="carousel-inner">
+            @while (mySqlDataReader.Read())
+            {
+                <div class="item active">
+                    <div class="row">
+                        @while (mySqlDataReader.Read() && contadorId != 4)
+                        {
+                            <div class="col-sm-3"><a href="#x" class="thumbnail"><img src="@mySqlDataReader.GetString("imagen")" alt="Image" class="img-responsive"></a></div>
+                            contadorId = contadorId + 1;
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="item">
+                <div class="row">
+                    <div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" class="img-responsive"></a></div>
+                    <div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" class="img-responsive"></a></div>
+                    <div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" class="img-responsive"></a></div>
+                    <div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" class="img-responsive"></a></div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="row">
+                    <div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" class="img-responsive"></a></div>
+                    <div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" class="img-responsive"></a></div>
+                    <div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" class="img-responsive"></a></div>
+                    <div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" class="img-responsive"></a></div>
+                </div>
+            </div>
+        </div>
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
+    </div>
+    <br />
+    <br />
+    <br />
+
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myCarousel').carousel({
+                interval: 10000
+
+            });
+        });
+    </script>
+</body>
+</html>
+
+@*        <table>
+            <tr>
+                <td>Nombre</td>
+                <td>Contraseña</td>
+            </tr>
+            @if (Conexion.mConexion.getConxion() != null)
+            {
+                while (mySqlDataReader.Read())
+                {
+                    <tr>
+                        <td>@mySqlDataReader.GetString("nombre")</td>
+                        <td>@mySqlDataReader.GetString("contrasena")</td>
+                    </tr>
+                }
+            }
+        </table>*@
+
+
+@*<div id="productCarousel" class="carousel slide carousel-multi-item" data-ride="carousel">
+        <!-- Indicadores -->
+        <ol class="carousel-indicators">
+            <li data-target="#productCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#productCarousel" data-slide-to="1"></li>
+            <li data-target="#productCarousel" data-slide-to="2"></li>
+            <!-- Agrega más indicadores según la cantidad de productos -->
+        </ol>
+
+        <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Anterior</span>
+        </a>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <a asp-page="/index"><img src="~/images/bokunopico.png" width="170" height="210" style="border:dotted" /></a>
+            </div>
+            <div class="carousel-item">
+                <a><img src="~/images/onepice.png" width="170" height="210" style="justify-content: center;" /></a>
+            </div>
+            <div class="carousel-item">
+                <a><img src="~/images/naruto.jpg" width="170" height="210" /></a>
+            </div>
+        </div>
+        <br /><br />
+
+        <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">
+                Siguiente</span>
+</a>
+</div>*@
